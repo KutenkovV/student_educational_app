@@ -1,1 +1,1 @@
-web: ./start.shrailpack deploy
+web: ./start.sh
