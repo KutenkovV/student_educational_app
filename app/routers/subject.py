@@ -16,7 +16,7 @@ async def get_session():
         yield session
 
 # CREATE
-@router.post("/", dependencies=[Depends(require_permission(["subjects.create"]))], response_model=SubjectOut)
+@router.post("/", dependencies=[Depends(require_permission("subjects.create"))], response_model=SubjectOut)
 async def create_subject(data: SubjectCreate, session: AsyncSession = Depends(get_session)):
     try:
         subject = Subject(**data.dict())
@@ -36,14 +36,14 @@ async def create_subject(data: SubjectCreate, session: AsyncSession = Depends(ge
     return subject
 
 # READ ALL
-@router.get("/", dependencies=[Depends(require_permission(["subjects.get"]))], response_model=SubjectOut, )
+@router.get("/", dependencies=[Depends(require_permission("subjects.get"))], response_model=SubjectOut, )
 async def get_all_subjects(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Subject))
     return result.scalars().all()
 
 
 # READ ONE
-@router.get("/{id_subject}", dependencies=[Depends(require_permission(["subjects.get"]))], response_model=SubjectOut)
+@router.get("/{id_subject}", dependencies=[Depends(require_permission("subjects.get"))], response_model=SubjectOut)
 async def get_subject(id_subject: int, session: AsyncSession = Depends(get_session)):
     result = await session.get(Subject, id_subject)
     if not result:
@@ -51,7 +51,7 @@ async def get_subject(id_subject: int, session: AsyncSession = Depends(get_sessi
     return result
 
 # UPDATE
-@router.put("/{id_subject}", dependencies=[Depends(require_permission(["subjects.update"]))], response_model=SubjectOut)
+@router.put("/{id_subject}", dependencies=[Depends(require_permission("subjects.update"))], response_model=SubjectOut)
 async def update_subject(id_subject: int, data: SubjectUpdate, session: AsyncSession = Depends(get_session)):
     subject = await session.get(Subject, id_subject)
     if not subject:
@@ -65,7 +65,7 @@ async def update_subject(id_subject: int, data: SubjectUpdate, session: AsyncSes
     return subject
 
 # DELETE
-@router.delete("/{id_subject}", dependencies=[Depends(require_permission(["subjects.delete"]))])
+@router.delete("/{id_subject}", dependencies=[Depends(require_permission("subjects.delete"))])
 async def delete_subject(id_subject: int, session: AsyncSession = Depends(get_session)):
     subject = await session.get(Subject, id_subject)
     if not subject:

@@ -16,7 +16,7 @@ async def get_session():
     async with async_session() as session:
         yield session
 
-@router.post("/register", dependencies=[Depends(require_permission(["users.create"]))])
+@router.post("/register", dependencies=[Depends(require_permission("users.create"))])
 async def register(data: UserCreate, session: AsyncSession = Depends(get_session)):
     hashed = hash_password(data.password)
 
@@ -111,14 +111,14 @@ protected_router = APIRouter(prefix="/users",
                             )
  
 # READ ALL
-@protected_router.get("/", response_model=list[UserOut], dependencies=[Depends(require_permission(["users.get"]))])
+@protected_router.get("/", response_model=list[UserOut], dependencies=[Depends(require_permission("users.get"))])
 async def get_all_user(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(User))
     return result.scalars().all()
 
 
 # READ ONE
-@protected_router.get("/{id}", response_model=UserOut, dependencies=[Depends(require_permission(["users.get"]))])
+@protected_router.get("/{id}", response_model=UserOut, dependencies=[Depends(require_permission("users.get"))])
 async def get_user(id: UUID, session: AsyncSession = Depends(get_session)):
     result = await session.get(User, id)
     if not result:
@@ -126,7 +126,7 @@ async def get_user(id: UUID, session: AsyncSession = Depends(get_session)):
     return result
 
 # UPDATE
-@protected_router.put("/{id}", response_model=UserOut, dependencies=[Depends(require_permission(["users.update"]))])
+@protected_router.put("/{id}", response_model=UserOut, dependencies=[Depends(require_permission("users.update"))])
 async def update_user(id: UUID, data: UserUpdate, session: AsyncSession = Depends(get_session)):
     user = await session.get(User, id)
     if not user:
@@ -140,7 +140,7 @@ async def update_user(id: UUID, data: UserUpdate, session: AsyncSession = Depend
     return user
 
 # DELETE
-@protected_router.delete("/{id}", dependencies=[Depends(require_permission(["users.delete"]))])
+@protected_router.delete("/{id}", dependencies=[Depends(require_permission("users.delete"))])
 async def delete_user(id: UUID, session: AsyncSession = Depends(get_session)):
     user = await session.get(User, id)
     if not user:

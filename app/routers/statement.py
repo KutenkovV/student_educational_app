@@ -39,14 +39,14 @@ async def create_statement(data: StatementCreate, session: AsyncSession = Depend
 
 
 # READ ALL
-@router.get("/", response_model=list[StatementOut], dependencies=[Depends(require_permission(["statements.get"]))])
+@router.get("/", response_model=list[StatementOut], dependencies=[Depends(require_permission("statements.get"))])
 async def get_all_statements(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Statement))
     return result.scalars().all()
 
 
 # READ ONE
-@router.get("/{id_statement}", response_model=StatementOut, dependencies=[Depends(require_permission(["statements.get"]))])
+@router.get("/{id_statement}", response_model=StatementOut, dependencies=[Depends(require_permission("statements.get"))])
 async def get_statement(id_statement: int, session: AsyncSession = Depends(get_session)):
     result = await session.get(Statement, id_statement)
     if not result:
@@ -55,7 +55,7 @@ async def get_statement(id_statement: int, session: AsyncSession = Depends(get_s
 
 
 # UPDATE
-@router.put("/{id_statement}", response_model=StatementOut, dependencies=[Depends(require_permission(["statements.update"]))])
+@router.put("/{id_statement}", response_model=StatementOut, dependencies=[Depends(require_permission("statements.update"))])
 async def update_statement(id_statement: int, data: StatementUpdate, session: AsyncSession = Depends(get_session)):
     statement = await session.get(Statement, id_statement)
     if not statement:
@@ -69,7 +69,7 @@ async def update_statement(id_statement: int, data: StatementUpdate, session: As
     return statement
 
 # DELETE
-@router.delete("/{id_statement}", dependencies=[Depends(require_permission(["statements.delete"]))])
+@router.delete("/{id_statement}", dependencies=[Depends(require_permission("statements.delete"))])
 async def delete_statement(id_statement: int, session: AsyncSession = Depends(get_session)):
     statement = await session.get(Statement, id_statement)
     if not statement:

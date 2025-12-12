@@ -54,7 +54,7 @@ async def get_role(id: str, session: AsyncSession = Depends(get_session)):
     return result
 
 # UPDATE
-@router.put("/{id}", response_model=RoleOut, dependencies=[Depends(require_permission(["roles.update"]))])
+@router.put("/{id}", response_model=RoleOut, dependencies=[Depends(require_permission("roles.update"))])
 async def update_role(id: str, data: RoleUpdate, session: AsyncSession = Depends(get_session)):
     role = await session.get(Role, id)
     if not role:
@@ -69,7 +69,7 @@ async def update_role(id: str, data: RoleUpdate, session: AsyncSession = Depends
 
 
 # DELETE
-@router.delete("/{id}", dependencies=[Depends(require_permission(["roles.delete"]))])
+@router.delete("/{id}", dependencies=[Depends(require_permission("roles.delete"))])
 async def delete_role(id: str, session: AsyncSession = Depends(get_session)):
     role = await session.get(Role, id)
     if not role:

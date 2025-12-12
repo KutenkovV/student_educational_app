@@ -16,7 +16,7 @@ async def get_session():
         yield session
 
 # CREATE
-@router.post("/", response_model=StudentOut, dependencies=[Depends(require_permission(["students.create"]))])
+@router.post("/", response_model=StudentOut, dependencies=[Depends(require_permission("students.create"))])
 async def create_student(data: StudentCreate, session: AsyncSession = Depends(get_session)):
     student = Student(**data.dict())
     session.add(student)
@@ -29,14 +29,14 @@ async def create_student(data: StudentCreate, session: AsyncSession = Depends(ge
     return student
 
 # READ ALL
-@router.get("/", response_model=list[StudentOut], dependencies=[Depends(require_permission(["students.get"]))])
+@router.get("/", dependencies=[Depends(require_permission("students.get"))], response_model=list[StudentOut])
 async def get_all_students(session: AsyncSession = Depends(get_session)):
     student = await session.execute(select(Student))
     return student.scalars().all()
 
 
 # READ ONE
-@router.get("/{id_student}", response_model=StudentOut, dependencies=[Depends(require_permission(["students.get"]))])
+@router.get("/{id_student}", response_model=StudentOut, dependencies=[Depends(require_permission("students.get"))])
 async def get_student(id_student: int, session: AsyncSession = Depends(get_session)):
     student = await session.get(Student, id_student)
     if not student:
@@ -44,7 +44,7 @@ async def get_student(id_student: int, session: AsyncSession = Depends(get_sessi
     return student
 
 # UPDATE
-@router.put("/{id_student}", response_model=StudentOut, dependencies=[Depends(require_permission(["students.update"]))])
+@router.put("/{id_student}", response_model=StudentOut, dependencies=[Depends(require_permission("students.update"))])
 async def update_student(id_student: int, data: StudentUpdate, session: AsyncSession = Depends(get_session)):
     student = await session.get(Student, id_student)
     if not student:
@@ -58,7 +58,7 @@ async def update_student(id_student: int, data: StudentUpdate, session: AsyncSes
     return student
 
 # DELETE
-@router.delete("/{id_student}", dependencies=[Depends(require_permission(["students.delete"]))])
+@router.delete("/{id_student}", dependencies=[Depends(require_permission("students.delete"))])
 async def delete_student(id_student: int, session: AsyncSession = Depends(get_session)):
     student = await session.get(Student, id_student)
     if not student:

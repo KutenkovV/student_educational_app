@@ -19,7 +19,7 @@ async def get_session():
 
 
 # CREATE
-@router.post("/", response_model=CurriculumOut, dependencies=[Depends(require_permission(["curriculums.create"]))])
+@router.post("/", response_model=CurriculumOut, dependencies=[Depends(require_permission("curriculums.create"))])
 async def create_curriculum(data: CurriculumCreate, session: AsyncSession = Depends(get_session)):
     try:
         curriculum = Curriculum(**data.dict())
@@ -40,14 +40,14 @@ async def create_curriculum(data: CurriculumCreate, session: AsyncSession = Depe
 
 
 # READ ALL
-@router.get("/", response_model=list[CurriculumOut], dependencies=[Depends(require_permission(["curriculums.get"]))])
+@router.get("/", response_model=list[CurriculumOut], dependencies=[Depends(require_permission("curriculums.get"))])
 async def get_all_curriculums(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Curriculum))
     return result.scalars().all()
 
 
 # READ ONE
-@router.get("/{id_curriculum}", response_model=CurriculumOut, dependencies=[Depends(require_permission(["curriculums.get"]))])
+@router.get("/{id_curriculum}", response_model=CurriculumOut, dependencies=[Depends(require_permission("curriculums.get"))])
 async def get_curriculum(id_curriculum: int, session: AsyncSession = Depends(get_session)):
     result = await session.get(Curriculum, id_curriculum)
     if not result:
@@ -56,7 +56,7 @@ async def get_curriculum(id_curriculum: int, session: AsyncSession = Depends(get
 
 
 # UPDATE
-@router.put("/{id_curriculum}", response_model=CurriculumOut, dependencies=[Depends(require_permission(["curriculums.update"]))])
+@router.put("/{id_curriculum}", response_model=CurriculumOut, dependencies=[Depends(require_permission("curriculums.update"))])
 async def update_curriculum(id_curriculum: int, data: CurriculumUpdate, session: AsyncSession = Depends(get_session)):
     curriculum = await session.get(Curriculum, id_curriculum)
     if not curriculum:
@@ -71,7 +71,7 @@ async def update_curriculum(id_curriculum: int, data: CurriculumUpdate, session:
 
 
 # DELETE
-@router.delete("/{id_curriculum}", dependencies=[Depends(require_permission(["curriculums.delete"]))])
+@router.delete("/{id_curriculum}", dependencies=[Depends(require_permission("curriculums.delete"))])
 async def delete_curriculum(id_curriculum: int, session: AsyncSession = Depends(get_session)):
     curriculum = await session.get(Curriculum, id_curriculum)
     if not curriculum:

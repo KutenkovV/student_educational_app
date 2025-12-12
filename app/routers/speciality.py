@@ -45,14 +45,14 @@ async def create_speciality(data: SpecialityCreate, session: AsyncSession = Depe
 
 
 # READ ALL
-@router.get("/", response_model=list[SpecialityOut], dependencies=[Depends(require_permission(["speciality.get"]))])
+@router.get("/", response_model=list[SpecialityOut], dependencies=[Depends(require_permission("speciality.get"))])
 async def get_all_specialities(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Speciality))
     return result.scalars().all()
 
 
 # READ ONE
-@router.get("/{id_speciality}", response_model=SpecialityOut, dependencies=[Depends(require_permission(["speciality.get"]))])
+@router.get("/{id_speciality}", response_model=SpecialityOut, dependencies=[Depends(require_permission("speciality.get"))])
 async def get_speciality(id_speciality: int, session: AsyncSession = Depends(get_session)):
     result = await session.get(Speciality, id_speciality)
     if not result:
@@ -61,7 +61,7 @@ async def get_speciality(id_speciality: int, session: AsyncSession = Depends(get
 
 
 # UPDATE
-@router.put("/{speciality_id}", response_model=SpecialityOut, dependencies=[Depends(require_permission(["speciality.update"]))])
+@router.put("/{speciality_id}", response_model=SpecialityOut, dependencies=[Depends(require_permission("speciality.update"))])
 async def update_speciality(speciality_id: int, data: SpecialityUpdate, session: AsyncSession = Depends(get_session)):
     speciality = await session.get(Speciality, speciality_id)
     if not speciality:
@@ -76,7 +76,7 @@ async def update_speciality(speciality_id: int, data: SpecialityUpdate, session:
 
 
 # DELETE
-@router.delete("/{id_speciality}", dependencies=[Depends(require_permission(["speciality.delete"]))])
+@router.delete("/{id_speciality}", dependencies=[Depends(require_permission("speciality.delete"))])
 async def delete_speciality(id_speciality: int, session: AsyncSession = Depends(get_session)):
     speciality = await session.get(Speciality, id_speciality)
     if not speciality:
