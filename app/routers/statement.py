@@ -1,12 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from sqlalchemy import text
+from app.core.dependencies import get_current_user_with_permissions, require_permission
 from app.db import async_session
 from app.models import Statement
 from app.schemas import StatementCreate, StatementUpdate, StatementOut
 
-router = APIRouter(prefix="/statements", tags=["Statement"])
+router = APIRouter(prefix="/statements", 
+                   tags=["Statement"], 
+                   dependencies=[Depends(get_current_user_with_permissions)]
+                )
 
 
 async def get_session():
@@ -15,7 +18,7 @@ async def get_session():
 
 
 # CREATE
-@router.post("/", response_model=StatementOut)
+@router.post("/", response_model=StatementOut, dependencies=[Depends(require_permission(["statements.create"]))])
 async def create_statement(data: StatementCreate, session: AsyncSession = Depends(get_session)):
     try:
         statement = Statement(**data.dict())
@@ -36,14 +39,14 @@ async def create_statement(data: StatementCreate, session: AsyncSession = Depend
 
 
 # READ ALL
-@router.get("/", response_model=list[StatementOut])
+@router.get("/", response_model=list[StatementOut], dependencies=[Depends(require_permission(["statements.get"]))])
 async def get_all_statements(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Statement))
     return result.scalars().all()
 
 
 # READ ONE
-@router.get("/{id_statement}", response_model=StatementOut)
+@router.get("/{id_statement}", response_model=StatementOut, dependencies=[Depends(require_permission(["statements.get"]))])
 async def get_statement(id_statement: int, session: AsyncSession = Depends(get_session)):
     result = await session.get(Statement, id_statement)
     if not result:
@@ -52,7 +55,7 @@ async def get_statement(id_statement: int, session: AsyncSession = Depends(get_s
 
 
 # UPDATE
-@router.put("/{id_statement}", response_model=StatementOut)
+@router.put("/{id_statement}", response_model=StatementOut, dependencies=[Depends(require_permission(["statements.update"]))])
 async def update_statement(id_statement: int, data: StatementUpdate, session: AsyncSession = Depends(get_session)):
     statement = await session.get(Statement, id_statement)
     if not statement:
@@ -65,9 +68,8 @@ async def update_statement(id_statement: int, data: StatementUpdate, session: As
     await session.refresh(statement)
     return statement
 
-
 # DELETE
-@router.delete("/{id_statement}")
+@router.delete("/{id_statement}", dependencies=[Depends(require_permission(["statements.delete"]))])
 async def delete_statement(id_statement: int, session: AsyncSession = Depends(get_session)):
     statement = await session.get(Statement, id_statement)
     if not statement:

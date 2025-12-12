@@ -1,20 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from app.core.dependencies import get_current_user_with_permissions, require_permission
 from app.db import async_session
 from app.models import Subject
 from app.schemas import SubjectCreate, SubjectUpdate, SubjectOut
 
-router = APIRouter(prefix="/subjects", tags=["Subject"])
-
+router = APIRouter(prefix="/subjects", 
+                   tags=["Subject"], 
+                   dependencies=[Depends(get_current_user_with_permissions)]
+                )
 
 async def get_session():
     async with async_session() as session:
         yield session
 
-
 # CREATE
-@router.post("/", response_model=SubjectOut)
+@router.post("/", dependencies=[Depends(require_permission(["subjects.create"]))], response_model=SubjectOut)
 async def create_subject(data: SubjectCreate, session: AsyncSession = Depends(get_session)):
     try:
         subject = Subject(**data.dict())
@@ -33,16 +35,15 @@ async def create_subject(data: SubjectCreate, session: AsyncSession = Depends(ge
     
     return subject
 
-
 # READ ALL
-@router.get("/", response_model=list[SubjectOut])
+@router.get("/", dependencies=[Depends(require_permission(["subjects.get"]))], response_model=SubjectOut, )
 async def get_all_subjects(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Subject))
     return result.scalars().all()
 
 
 # READ ONE
-@router.get("/{id_subject}", response_model=SubjectOut)
+@router.get("/{id_subject}", dependencies=[Depends(require_permission(["subjects.get"]))], response_model=SubjectOut)
 async def get_subject(id_subject: int, session: AsyncSession = Depends(get_session)):
     result = await session.get(Subject, id_subject)
     if not result:
@@ -50,7 +51,7 @@ async def get_subject(id_subject: int, session: AsyncSession = Depends(get_sessi
     return result
 
 # UPDATE
-@router.put("/{id_subject}", response_model=SubjectOut)
+@router.put("/{id_subject}", dependencies=[Depends(require_permission(["subjects.update"]))], response_model=SubjectOut)
 async def update_subject(id_subject: int, data: SubjectUpdate, session: AsyncSession = Depends(get_session)):
     subject = await session.get(Subject, id_subject)
     if not subject:
@@ -64,7 +65,7 @@ async def update_subject(id_subject: int, data: SubjectUpdate, session: AsyncSes
     return subject
 
 # DELETE
-@router.delete("/{id_subject}")
+@router.delete("/{id_subject}", dependencies=[Depends(require_permission(["subjects.delete"]))])
 async def delete_subject(id_subject: int, session: AsyncSession = Depends(get_session)):
     subject = await session.get(Subject, id_subject)
     if not subject:

@@ -74,3 +74,11 @@ class Role(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String, unique=True, nullable=False)
+    
+#Таблица "Токены обновления"
+class RefreshToken(Base):
+    __tablename__ = "refresh_tokens"
+
+    user_id = Column(UUID(as_uuid=True), nullable=False)
+    token = Column(String, unique=True, primary_key=True,nullable=False)
+    expires_at = Column(Integer, nullable=False)

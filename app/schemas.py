@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 from uuid import UUID
 
@@ -160,3 +161,15 @@ class UserUpdate(UserBase):
 class LoginRequest(BaseModel):
     login: str
     password: str
+    
+class UserWithPermissions(BaseModel):
+    id: str
+    role: str
+    permissions: List[str]
+    
+#Рефреш токен
+class RefreshTokenBase(BaseModel):
+    refresh_token: str
+    
+class RefreshTokenCreate(RefreshTokenBase):
+    pass
