@@ -3,6 +3,6 @@ service:
   build:
     builder: python
   run:
-    command: ./start.sh
+    command: bash start.sh
   env:
     RAILPACK_PYTHON_VERSION: "3.11"
