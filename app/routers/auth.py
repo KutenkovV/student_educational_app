@@ -10,7 +10,7 @@ from sqlalchemy import select, text
 from app.models import User
 from app.schemas import RefreshTokenBase, UserCreate, UserOut, UserUpdate, LoginRequest
 
-router = APIRouter(tags=["Auth"])
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 async def get_session():
     async with async_session() as session:
