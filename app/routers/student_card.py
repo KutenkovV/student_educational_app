@@ -33,7 +33,7 @@ async def get_student_personal_card(
     return result.mappings().all()
 
 #Скачать карточку студента в .xlsx
-@router.get("student-card/{record_book_number}/xlsx")
+@router.get("/student-card/{record_book_number}/xlsx")
 async def download_student_card_xlsx(
     record_book_number: int,
     db: AsyncSession = Depends(get_session)
