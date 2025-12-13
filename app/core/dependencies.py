@@ -1,5 +1,5 @@
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 
 from jose import jwt, JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +12,7 @@ from fastapi.security import HTTPBearer
 
 security = HTTPBearer()
 
-oauth2_scheme = OAuth2PasswordRequestForm(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 # ----------- SESSION DEPENDENCY -----------
