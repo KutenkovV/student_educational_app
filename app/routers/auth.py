@@ -65,7 +65,7 @@ async def login(form: LoginRequest, session: AsyncSession = Depends(get_session)
         "refresh_token": refresh,
         "token_type": "bearer"
     }
-    
+
 @router.post("/refresh")
 async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_session)):
     
