@@ -36,11 +36,10 @@ async def create_subject(data: SubjectCreate, session: AsyncSession = Depends(ge
     return subject
 
 # READ ALL
-@router.get("/", dependencies=[Depends(require_permission("subjects.get"))], response_model=SubjectOut, )
+@router.get("/", dependencies=[Depends(require_permission("subjects.get"))], response_model=list[SubjectOut])
 async def get_all_subjects(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(Subject))
     return result.scalars().all()
-
 
 # READ ONE
 @router.get("/{id_subject}", dependencies=[Depends(require_permission("subjects.get"))], response_model=SubjectOut)

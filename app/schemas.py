@@ -173,3 +173,23 @@ class RefreshTokenBase(BaseModel):
     
 class RefreshTokenCreate(RefreshTokenBase):
     pass
+
+#Персональная карточка студента
+class StudentPersonalCard(BaseModel):
+    surname: str
+    name: str
+    otchectvo: str
+    speciality_name: str
+    group_full: str
+    subject_name: str
+    semester: int
+    attestation_type: str
+    grade: str
+
+class ReportSchoolPlan(BaseModel):
+    speciality_name: str
+    start_year: int
+    subject_name: str
+    hours_amount: int
+    semester: int
+    attestation_type: str
