@@ -14,6 +14,7 @@ from app.routers.student_card import router as student_card_router
 from app.routers.school_plan import router as school_plan
 from app.routers.attestation_plan import router as attestation_plan
 from fastapi.security import HTTPBearer
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Student Educational App API",
@@ -23,6 +24,17 @@ app = FastAPI(
     redoc_url="/redoc",      # Redoc
     openapi_url="/openapi.json",
     swagger_ui_init_oauth={}
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",   # Vite dev
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.on_event("startup")
