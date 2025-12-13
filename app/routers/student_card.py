@@ -9,14 +9,16 @@ from fastapi.responses import StreamingResponse
 import openpyxl
 from io import BytesIO
 
-router = APIRouter(prefix="/reports", tags=["Student card"])
+from app.core.dependencies import get_current_user_with_permissions, require_permission
+
+router = APIRouter(prefix="/reports", tags=["Student card"], dependencies=[Depends(get_current_user_with_permissions)])
 
 
 async def get_session():
     async with async_session() as session:
         yield session
 
-@router.get("/student-card/{record_book_number}", response_model=list[StudentPersonalCard])
+@router.get("/student-card/{record_book_number}", dependencies=[Depends(require_permission("reports.personal_student_card"))], response_model=list[StudentPersonalCard])
 async def get_student_personal_card(
     record_book_number: int,
     session: AsyncSession = Depends(get_session),
@@ -33,7 +35,7 @@ async def get_student_personal_card(
     return result.mappings().all()
 
 #Скачать карточку студента в .xlsx
-@router.get("/student-card/{record_book_number}/xlsx")
+@router.get("/student-card/{record_book_number}/xlsx", dependencies=[Depends(require_permission("reports.personal_student_card"))],)
 async def download_student_card_xlsx(
     record_book_number: int,
     db: AsyncSession = Depends(get_session)

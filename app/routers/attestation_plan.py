@@ -7,14 +7,17 @@ from fastapi.responses import StreamingResponse
 from io import BytesIO
 import pandas as pd
 
-router = APIRouter(prefix="/reports/attestation-plan", tags=["Attestation plan"])
+from app.core.dependencies import get_current_user_with_permissions, require_permission
+
+router = APIRouter(prefix="/reports/attestation-plan", tags=["Attestation plan"], dependencies=[Depends(get_current_user_with_permissions)])
 
 
 @router.get("/")
 async def get_attestation_plan(
     id_speciality: int,
     semester: int,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
+    dependencies=[Depends(require_permission("reports.attestation_plan"))],
 ):
     result = await session.execute(
         text("SELECT * FROM report_attestation_plan(:id_speciality, :semester)"),
@@ -26,7 +29,8 @@ async def get_attestation_plan(
 async def download_attestation_plan_xlsx(
     id_speciality: int,
     semester: int,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_session),
+    dependencies=[Depends(require_permission("reports.attestation_plan"))],
 ):
     result = await session.execute(
         text("SELECT * FROM report_attestation_plan(:id_speciality, :semester)"),

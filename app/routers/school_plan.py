@@ -7,13 +7,15 @@ from fastapi.responses import StreamingResponse
 from io import BytesIO
 from openpyxl import Workbook
 
-router = APIRouter(prefix="/reports", tags=["Reports"])
+from app.core.dependencies import get_current_user_with_permissions, require_permission
+
+router = APIRouter(prefix="/reports", tags=["Reports"], dependencies=[Depends(get_current_user_with_permissions)])
 
 async def get_session():
     async with async_session() as session:
         yield session
         
-@router.get("/school-plan")
+@router.get("/school-plan", dependencies=[Depends(require_permission("reports.school_plan"))])
 async def get_school_plan(
     id_speciality: int,
     start_year: int,
@@ -31,7 +33,7 @@ async def get_school_plan(
     rows = result.mappings().all()
     return rows
 
-@router.get("/school-plan/xlsx")
+@router.get("/school-plan/xlsx", dependencies=[Depends(require_permission("reports.school_plan"))])
 async def download_school_plan_xlsx(
     id_speciality: int,
     start_year: int,
