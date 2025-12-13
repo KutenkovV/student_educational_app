@@ -7,6 +7,9 @@ from sqlalchemy import text
 from app.db import async_session
 from app.core.jwt import SECRET_KEY, ALGORITHM
 from app.schemas import UserWithPermissions
+from fastapi.security import HTTPBearer
+
+security = HTTPBearer()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 

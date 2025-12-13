@@ -13,6 +13,7 @@ from app.routers.auth import protected_router as user_router
 from app.routers.student_card import router as student_card_router
 from app.routers.school_plan import router as school_plan
 from app.routers.attestation_plan import router as attestation_plan
+from fastapi.security import HTTPBearer
 
 app = FastAPI(
     title="Student Educational App API",
@@ -20,7 +21,8 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",        # Swagger UI
     redoc_url="/redoc",      # Redoc
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
+    swagger_ui_init_oauth={}
 )
 
 @app.on_event("startup")
