@@ -23,8 +23,8 @@ async def get_session():
 async def create_speciality(data: SpecialityCreate, session: AsyncSession = Depends(get_session)):
     try:
         await session.execute(
-            text("CALL insert_speciality(:name)"),
-            {"name": data.speciality_name}
+            text("CALL insert_speciality(:speciality_name)"),
+            {"speciality_name": data.speciality_name}
         )
         await session.commit()
         
