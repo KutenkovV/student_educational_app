@@ -16,16 +16,6 @@ from app.routers.attestation_plan import router as attestation_plan
 from fastapi.security import HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(
-    title="Student Educational App API",
-    description="API для работы с образовательной системой: студенты, предметы, учебные планы, аттестации",
-    version="1.0.0",
-    docs_url="/docs",        # Swagger UI
-    redoc_url="/redoc",      # Redoc
-    openapi_url="/openapi.json",
-    swagger_ui_init_oauth={}
-)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -35,6 +25,16 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+app = FastAPI(
+    title="Student Educational App API",
+    description="API для работы с образовательной системой: студенты, предметы, учебные планы, аттестации",
+    version="1.0.0",
+    docs_url="/docs",        # Swagger UI
+    redoc_url="/redoc",      # Redoc
+    openapi_url="/openapi.json",
+    swagger_ui_init_oauth={}
 )
 
 @app.on_event("startup")
