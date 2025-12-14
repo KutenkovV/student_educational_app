@@ -16,17 +16,6 @@ from app.routers.attestation_plan import router as attestation_plan
 from fastapi.security import HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",   # Vite dev
-        "http://127.0.0.1:5173",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 app = FastAPI(
     title="Student Educational App API",
     description="API для работы с образовательной системой: студенты, предметы, учебные планы, аттестации",

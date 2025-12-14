@@ -29,7 +29,7 @@ async def create_speciality(data: SpecialityCreate, session: AsyncSession = Depe
         await session.commit()
         
         result = await session.execute(
-            select(Speciality).where(Speciality.speciality_name == data.name)
+            select(Speciality).where(Speciality.speciality_name == data.speciality_name)
         )
         speciality = result.scalar_one()
     except Exception as e:
@@ -42,6 +42,8 @@ async def create_speciality(data: SpecialityCreate, session: AsyncSession = Depe
         raise HTTPException(status_code=400, detail=msg)
     
     return speciality
+
+
 
 
 # READ ALL

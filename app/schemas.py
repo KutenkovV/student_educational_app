@@ -10,11 +10,11 @@ class SpecialityBase(BaseModel):
     id_speciality: int
     speciality_name: str
 
-class SpecialityCreate(SpecialityBase):
-    pass
+class SpecialityCreate(BaseModel):
+    speciality_name: str
 
-class SpecialityUpdate(SpecialityBase):
-    pass
+class SpecialityUpdate(BaseModel):
+    speciality_name: str
 
 class SpecialityOut(SpecialityBase):
     id_speciality: int 
